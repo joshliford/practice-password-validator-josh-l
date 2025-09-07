@@ -22,27 +22,37 @@ the user know their password does not meet the requirements
 
 const readline = require('readline-sync');
 
-// Declare variables without assignments prior to the start of the do-while loop
-let password;
-let passwordHasNumber;
-let passwordHasUpperCase;
-let passwordLength;
+function isCorrectLength(password) {
+    if (!password) {
+        throw new Error("Password cannot be blank. Please enter a valid password.");
+    } else if (password.length < 8) {
+        throw new Error("Password must contain 8 or more characters.");
+    }
+    return true;
+}
 
-do {
-    password = readline.question("Please enter your password: "); // Question to prompt user for password input
-    passwordLength = password.length;
-    passwordHasNumber = false;
-    passwordHasUpperCase = false;
-
-    for (let i = 0; i < passwordLength; i++) { // for loop to loop through the password, logging each character as it goes through the length of the string
-        let char = password[i]; // each character in the password is logged
-        if (char >= '0' && char <= '9') { // if statement to check for a number in the logged characters from the for loop
-            passwordHasNumber = true; // passwordHasNumber is true IF a number is present in 'password'
-        }
-        if (char >= 'A' && char <= 'Z') { // if statement to check for an uppercase letter in the logged characters from the for loop
-            passwordHasUpperCase = true; // passwordHasUpperCase is true IF an uppercase letter is present in 'password'
+function containsUpperCase(password) {
+    for (let char in password) {
+        if (password[char] >= 'A' && password[char] <= 'Z') {
+            return true;
+        } else {
+            throw new Error("Password must contain at least 1 uppercase letter.");
         }
     }
-} while (passwordLength < 8 || !passwordHasNumber || !passwordHasUpperCase); // Continue looping until all requirements are met
+}
 
-console.log("You have successfully logged in."); // If the password requirements are met, you exit the loop and this statement prints to the console
+let password;
+
+try {
+    do {
+        password = readline.question("Please enter your password: ");
+
+    } while (!isCorrectLength(password) || !containsUpperCase(password));
+
+    console.log("You've successfully logged in!");
+
+} catch (error) {
+    console.log(error.message);
+}
+
+
